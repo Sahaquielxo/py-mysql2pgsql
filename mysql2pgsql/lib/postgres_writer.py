@@ -86,11 +86,11 @@ class PostgresWriter(object):
             elif column['type'] == 'timestamp':
                 if column['default'] == None:
                     default = None
-                elif "current_timestamp()" in column['default']:
+                elif "current_timestamp()" in str(column['default']):
                     default = ' DEFAULT CURRENT_TIMESTAMP'
-                elif "CURRENT_TIMESTAMP" in column['default']:
+                elif "CURRENT_TIMESTAMP" in str)column['default']):
                     default = ' DEFAULT CURRENT_TIMESTAMP'
-                elif "0000-00-00 00:00" in column['default']:
+                elif "0000-00-00 00:00" in str(column['default']):
                     if self.tz:
                         default = " DEFAULT '1970-01-01T00:00:00.000000%s'" % self.tz_offset
                     elif "0000-00-00 00:00:00" in column['default']:
@@ -283,7 +283,7 @@ class PostgresWriter(object):
         for key in table.triggers:
             trigger_sql.append("""CREATE OR REPLACE FUNCTION %(fn_trigger_name)s RETURNS TRIGGER AS $%(trigger_name)s$
             BEGIN
-                %(trigger_statement)s
+                %(trigger_statement)s;
             RETURN NULL;
             END;
             $%(trigger_name)s$ LANGUAGE plpgsql;""" % {
@@ -294,7 +294,7 @@ class PostgresWriter(object):
                 'fn_trigger_name': 'fn_' + key['name'] + '()',
                 'trigger_statement': key['statement']})
 
-            trigger_sql.append("""CREATE TRIGGER %(trigger_name)s %(trigger_time)s %(trigger_event)s ON %(table_name)s
+            trigger_sql.append("""CREATE TRIGGER %(trigger_name)s %(trigger_time)s %(trigger_event)s ON "%(table_name)s"
             FOR EACH ROW
             EXECUTE PROCEDURE fn_%(trigger_name)s();""" % {
                 'table_name': table.name,
