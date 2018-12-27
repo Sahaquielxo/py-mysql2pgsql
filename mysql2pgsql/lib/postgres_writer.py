@@ -88,7 +88,7 @@ class PostgresWriter(object):
                     default = None
                 elif "current_timestamp()" in str(column['default']):
                     default = ' DEFAULT CURRENT_TIMESTAMP'
-                elif "CURRENT_TIMESTAMP" in str)column['default']):
+                elif "CURRENT_TIMESTAMP" in str(column['default']):
                     default = ' DEFAULT CURRENT_TIMESTAMP'
                 elif "0000-00-00 00:00" in str(column['default']):
                     if self.tz:
